@@ -1,9 +1,11 @@
 # ******************************************************************************
 #                                                                              *
+# ENSAE PIERRE DIAGNE DE DAKAR                                                 *
+# COURS DE TRAITEMENT STATISTIQUE AVEC R                                       *
 # NOM & PRENOM : EDIMA BIYENDA Hildegarde                                      *
 # CLASSE       : ISEP 2                                                        *
 # Date         : 24 avril 2024                                                 *
-# Année académique : 2023-2024                                                 *
+# AnnÃ©e acadÃ©mique : 2023-2024                                                 *
 #                                                                              *
 # ******************************************************************************
 
@@ -22,17 +24,17 @@ colnames(cereales)[4:14] <- c("AutresCereales","Qtty_cons",
 # Gestion des valeurs manquantes;
 # -------------------------------
 
-## Suppression des ménages qui ne consomment pas de céréales;
+## Suppression des mÃ©nages qui ne consomment pas de cÃ©rÃ©ales;
 attach(cereales)
 anyNA(Qtty_cons)
 
-## Création d'une variable temporaire;
+## CrÃ©ation d'une variable temporaire;
 cereales$t <- ifelse(is.na(Qtty_cons)==1,1,0)
 table(cereales$t)
 cereales_na <- cereales[cereales$t==1,]
 View(cereales_na)
 
-## Suppression des ménages n'ayant pas déclaré les quantités consommées;
+## Suppression des mÃ©nages n'ayant pas dÃ©clarÃ© les quantitÃ©s consommÃ©es;
 
 cereales <- cereales[cereales$t==0,]
 dim(cereales)
@@ -49,7 +51,7 @@ cereales$cereales__id_recoded <- factor(cereales$cereales__id,
 edit(cereales$cereales__id_recoded)
 View(cereales)
 
-## Recodage de la variable Unite_cons pour avoir les unités de mesures correspondantes;
+## Recodage de la variable Unite_cons pour avoir les unitÃ©s de mesures correspondantes;
 cereales$Unite_cons_recoded <- factor(cereales$Unite_cons,
                                       levels = unname(attr(cereales$Unite_cons,
                                                            "labels")),
@@ -57,7 +59,7 @@ cereales$Unite_cons_recoded <- factor(cereales$Unite_cons,
                                                          "labels")))
 edit(cereales$Unite_cons_recoded)
 
-## Recodage de la variable Taille_cons pour avoir les unités de mesures correspondantes;
+## Recodage de la variable Taille_cons pour avoir les unitÃ©s de mesures correspondantes;
 cereales$Taille_cons_recoded <- factor(cereales$Taille_cons,
                                        levels = unname(attr(cereales$Taille_cons,
                                                             "labels")),
@@ -79,7 +81,7 @@ edit(cereales$classCereal_RizKg)
 
 
 
-### Créons dans la base cereales et la base table_de_conversion une variable real_id qui est la concaténation des valeurs de produitID, UniteID et TailleID;
+### CrÃ©ons dans la base cereales et la base table_de_conversion une variable real_id qui est la concatÃ©nation des valeurs de produitID, UniteID et TailleID;
 View(cereales)
 cereales$real_id <- paste(cereales$cereales__id, cereales$Unite_cons, cereales$Taille_cons)
 View(cereales)
@@ -97,13 +99,13 @@ basefusionnee2 <- merge(cereales, Table_de_conversion_phase_2, by= "real_id_acha
 View(basefusionnee2)
 library(dplyr)
 
-#Calculons le prix unitaire pour chaque combinaison de produit, unité, taille;
+#Calculons le prix unitaire pour chaque combinaison de produit, unitÃ©, taille;
 # ----------------------------------------------------------------------------
 
 basefusionnee2$prix_unitaire_real<- basefusionnee2$Value_achat/basefusionnee2$Qtty_achat
 
 
-#Extraire les prix et autres dans une nouvelle base de données;
+#Extraire les prix et autres dans une nouvelle base de donnÃ©es;
 # -------------------------------------------------------------
 
 prix_unitaire <- subset(basefusionnee2,!is.na(prix_unitaire_real),
@@ -126,7 +128,7 @@ cereales2 <- merge(basefusionnee2, prixunitaire2,
                    by.x=c("cereales__id","Unite_cons","Taille_cons"),
                    by.y = c("cereales__id", "Unite_achat", "Taille_achat"),
                    all.x = T)
-# Imputons les valeurs manquantes par la moyenne des prix pour une céréale et une unité donnée;
+# Imputons les valeurs manquantes par la moyenne des prix pour une cÃ©rÃ©ale et une unitÃ© donnÃ©e;
 # --------------------------------------------------------------------------------------------
 
 cereales2 <- cereales2 %>%
